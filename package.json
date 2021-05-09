@@ -1,0 +1,23 @@
+{
+  "name": "rili-livingdocs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaRaFF/rili-livingdocs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaRaFF/rili-livingdocs/issues"
+  },
+  "homepage": "https://github.com/DaRaFF/rili-livingdocs#readme",
+  "dependencies": {
+    "fastify": "^3.15.1",
+    "fastify-multipart": "^4.0.5"
+  }
+}
