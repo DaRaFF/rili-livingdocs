@@ -1,0 +1,62 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: rili
+  namespace: ralph
+spec:
+  hosts:
+  - "rili.cluster.livingdocs.io"
+  gateways:
+  - "istio-system/cluster"
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: rili
+        port:
+          number: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rili
+  namespace: ralph
+spec:
+  selector:
+    app: rili
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rili
+  namespace: ralph
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: rili
+  template:
+    metadata:
+      labels:
+        app: rili
+    spec:
+      containers:
+      - name: rili
+        image: daraff/rili-livingdocs
+        env:
+        # fill in a Github token before you apply the config
+        # this is needed that rili can fetch Github infos
+        - name: GH_TOKEN
+          value: ""
+        resources: {limits: {cpu: "0.5", memory: 200Mi}}
