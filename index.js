@@ -1,5 +1,5 @@
 const fastify = require('fastify')()
-const rili = require('rili')
+const rili2 = require('rili2')
 const NodeCache = require('node-cache')
 const releaseCache = new NodeCache( { stdTTL: 120, checkperiod: 1 } )
 const token = process.env.GH_TOKEN
@@ -8,12 +8,25 @@ const token = process.env.GH_TOKEN
 //       this is not understandable and needs to be changed.
 const Configstore = require('configstore')
 const riliJson = require('./rili.json')
-const config = new Configstore('rili', riliJson)
+const config = new Configstore('rili2', riliJson)
 
 async function loadRelease() {
   console.log('load release info', new Date().toISOString().slice(0, 19))
-
-  const result = await rili.getVersionFromConfig({token})
+  let result
+  try {
+    result = await rili2.getVersionFromConfig({token})
+  } catch (e) {
+    if (e.response.status === 401) {
+      const info = 'maybe the github token is not set correctly'
+      const message = `rili2.getVersionFromConfig: ${e.message} | ${JSON.stringify(e.response.data)} | ${info}`
+      console.log(message)
+      return message
+    } else {
+      const message = `rili2.getVersionFromConfig: ${e.message} | ${JSON.stringify(e.response.data)}`
+      console.log(message)
+      return message
+    }
+  }
   const lines = result.map((line) => {
     if (line.type === 'header') return `<dt>${line.value}</dt>`
     if (line.type === 'data') return `
