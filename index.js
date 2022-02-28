@@ -1,14 +1,14 @@
 const fastify = require('fastify')()
 const rili2 = require('rili2')
 const NodeCache = require('node-cache')
-const releaseCache = new NodeCache( { stdTTL: 120, checkperiod: 1 } )
+const releaseCache = new NodeCache( { stdTTL: 120, checkperiod: 5 } )
 const token = process.env.GH_TOKEN
 
 // TODO: repo daraff/rili loads the config from a config store and therefore we set it here again
 //       this is not understandable and needs to be changed.
 const Configstore = require('configstore')
 const riliJson = require('./rili.json')
-const config = new Configstore('rili2', riliJson)
+new Configstore('rili2', riliJson)
 
 async function loadRelease() {
   console.log('load release info', new Date().toISOString().slice(0, 19))
