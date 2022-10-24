@@ -1,4 +1,7 @@
-const fastify = require('fastify')()
+const fastify = require('fastify')({
+  logger: true,
+  pluginTimeout: 100000 // 100 seconds
+})
 const rili2 = require('rili2')
 const NodeCache = require('node-cache')
 const releaseCache = new NodeCache( { stdTTL: 120, checkperiod: 5 } )
@@ -56,8 +59,6 @@ fastify.addHook('onReady', async function () {
     page = await loadRelease()
   })
 })
-
-fastify.register(require('fastify-multipart'))
 
 fastify.get('/', async function (req, reply) {
   reply.type('text/html').send(page)
